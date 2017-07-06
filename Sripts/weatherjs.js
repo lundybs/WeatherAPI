@@ -1,4 +1,4 @@
-﻿const weatherAPIURL = "http://api.openweathermap.org/data/2.5/";
+﻿const weatherAPIURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/";
 const london = "weather?lat=51.5074&lon=-0.1278";
 const seattle = "weather?lat=47.6762&lon=-122.3182";
 const apiKey = "&APPID=df630ddcd4d316d08e414796f044e775&units=imperial";
