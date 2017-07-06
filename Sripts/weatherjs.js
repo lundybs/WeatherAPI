@@ -49,3 +49,34 @@ function SeattleWeather() {
 
     seattleWeatherRequest.send();
 }
+
+function MyLocalWeather() {
+    navigator.geolocation.getCurrentPosition(GeoLocSuccess, GeoLocError)
+}
+
+function GeoLocError() {
+    let displayError = document.getElementById("weather-container");
+    displayWeather.innerHTML = "Error in finding your current localation!";
+}
+
+function GeoLocSuccess() {
+    console.log(weatherAPIURL + london + apiKey);
+    let displayWeather = document.getElementById("weather-container");
+    londonWeatherRequest.open("GET", weatherAPIURL + london + apiKey, true)
+
+    londonWeatherRequest.onload = function () {
+        let response = JSON.parse(this.response);
+        // console.log(response.weather.main);
+        displayWeather.innerHTML = `<p>Current Temp: ${response.main.temp} degrees Fahrenheit </br>
+                                    Wind Speeed: ${response.wind.speed}mph </br>
+                                    Current Humidity: ${response.main.humidity}%</p>`;
+    }
+
+    londonWeatherRequest.onerror = function () {
+        let displayWeather = document.getElementById("weather-container");
+        displayWeather.innerHTML = `The server could not be reached for info`;
+        console.log("Error in accessing weather data");
+    }
+
+    londonWeatherRequest.send();
+}
