@@ -2,7 +2,7 @@
 const london = "weather?lat=51.5074&lon=-0.1278";
 const seattle = "weather?lat=47.6762&lon=-122.3182";
 const apiKey = "&APPID=df630ddcd4d316d08e414796f044e775&units=imperial";
-let londonWeatherRequest = new XMLHttpRequest();
+
 
 function LondonWeather() {
     console.log(weatherAPIURL + london + apiKey);
@@ -51,32 +51,34 @@ function SeattleWeather() {
 }
 
 function MyLocalWeather() {
-    navigator.geolocation.getCurrentPosition(GeoLocSuccess, GeoLocError)
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(myPosition);
+    } else {
+        displayWeather.innerHTML = "Your location was not found!";
+    }
 }
 
-function GeoLocError() {
-    let displayError = document.getElementById("weather-container");
-    displayWeather.innerHTML = "Error in finding your current localation!";
-}
-
-function GeoLocSuccess() {
-    console.log(weatherAPIURL + london + apiKey);
+function myPosition(position) {
+    let myWeatherRequest = new XMLHttpRequest();
     let displayWeather = document.getElementById("weather-container");
-    londonWeatherRequest.open("GET", weatherAPIURL + london + apiKey, true)
+    //console.log(weatherAPIURL + "weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + apiKey);
+    myWeatherRequest.open("GET", weatherAPIURL + "weather?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + apiKey, true)
 
-    londonWeatherRequest.onload = function () {
+    myWeatherRequest.onload = function () {
         let response = JSON.parse(this.response);
         // console.log(response.weather.main);
-        displayWeather.innerHTML = `<p>Current Temp: ${response.main.temp} degrees Fahrenheit </br>
+        displayWeather.innerHTML = `<p> Your location is: ${response.name}</br>
+                                    Current Temp: ${response.main.temp} degrees Fahrenheit </br>
                                     Wind Speeed: ${response.wind.speed}mph </br>
                                     Current Humidity: ${response.main.humidity}%</p>`;
     }
 
-    londonWeatherRequest.onerror = function () {
+    myWeatherRequest.onerror = function () {
         let displayWeather = document.getElementById("weather-container");
         displayWeather.innerHTML = `The server could not be reached for info`;
         console.log("Error in accessing weather data");
     }
 
-    londonWeatherRequest.send();
+    myWeatherRequest.send();
 }
